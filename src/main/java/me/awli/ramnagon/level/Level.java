@@ -22,7 +22,6 @@ import java.util.Random;
  * TODO:
  *  - Independent tile position
  *  - Getter and setters for the entities list
- *  - 24000 ticks day/night cycle
  */
 public class Level {
     public static final int TILE_WIDTH = 32;
@@ -54,8 +53,25 @@ public class Level {
         entities.forEach(entity -> entity.render(screen));
     }
 
-    public void renderSky(Screen screen) { // TEMP. will refactor later
-        Arrays.fill(screen.pixels, Constants.DAY_COLOR);
+    public void renderSky(Screen screen) {
+        int timeOfTheDay = (int) (time % 2400);
+        int color;
+
+        if (timeOfTheDay < 200) { // dusk
+            float factor = (float) timeOfTheDay / 200;
+            color = Utils.interpolateColor(Constants.NIGHT_COLOR, Constants.DUSK_COLOR, factor);
+        } else if (timeOfTheDay < 200 + 1000) { // day
+            float factor = (float) (timeOfTheDay - 200) / 1000;
+            color = Utils.interpolateColor(Constants.DUSK_COLOR, Constants.DAY_COLOR, factor);
+        } else if (timeOfTheDay < 200 + 1000 + 200) { // dusk
+            float factor = (float) (timeOfTheDay - 200 - 1000) / 200;
+            color = Utils.interpolateColor(Constants.DAY_COLOR, Constants.DUSK_COLOR, factor);
+        } else { // night
+            float factor = (float) (timeOfTheDay - 200 - 1000 - 200) / 1000;
+            color = Utils.interpolateColor(Constants.DUSK_COLOR, Constants.NIGHT_COLOR, factor);
+        }
+
+        Arrays.fill(screen.pixels, color);
     }
 
     public void renderTiles(Screen screen) {

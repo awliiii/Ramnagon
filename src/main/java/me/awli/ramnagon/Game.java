@@ -10,7 +10,6 @@ import java.awt.event.KeyEvent;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.Arrays;
 
 /*
  * TODO:
@@ -22,7 +21,7 @@ public final class Game extends Canvas implements Runnable {
     public static final int WIDTH = 640;
     public static final int HEIGHT = (WIDTH * 3) / 4;
 
-    public static final String TITLE = "RAMNAGON alphał";
+    public static final String TITLE = "RAMNAGON alpha";
 
     public final InputHandler inputHandler;
 
@@ -102,9 +101,9 @@ public final class Game extends Canvas implements Runnable {
 
         if (inputHandler.keys[KeyEvent.VK_1])
             level.loadMap("/maps/plains.png");
-        if (inputHandler.keys[KeyEvent.VK_2])
+        else if (inputHandler.keys[KeyEvent.VK_2])
             level.loadMap("/maps/long.png");
-        if (inputHandler.keys[KeyEvent.VK_3])
+        else if (inputHandler.keys[KeyEvent.VK_3])
             level.loadMap("/maps/square.png");
 
         level.tick();

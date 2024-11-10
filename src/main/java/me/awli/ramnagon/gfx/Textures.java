@@ -8,7 +8,7 @@ import java.io.IOException;
 
 public class Textures {
     public static final Texture[][] FONT = loadAndCut("/textures/ui/monogram-bitmap.png", 6, 10);
-    public static final Texture TILES[][] = loadAndCut("/textures/tiles.png", 32, 32);
+    public static final Texture[][] TILES = loadAndCut("/textures/tiles.png", 32, 32);
 
     public static Texture[][] loadAndCut(String name, int sw, int sh) {
         BufferedImage img;
