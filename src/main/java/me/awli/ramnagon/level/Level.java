@@ -22,6 +22,7 @@ import java.util.Random;
  * TODO:
  *  - Independent tile position
  *  - Getter and setters for the entities list
+ *  - Blend everything with the skyColor
  */
 public class Level {
     public static final int TILE_WIDTH = 32;
@@ -29,11 +30,13 @@ public class Level {
 
     public Camera camera;
 
+    private final List<Entity> entities = new ArrayList<>();
+
     private byte[][] map;
 
-    private List<Entity> entities = new ArrayList<>();
-
     private long time; // the number of ticks
+
+    private int skyColor = Constants.NIGHT_COLOR;
 
     public Level() {
         this.camera = new Camera(Game.WIDTH / 2, Game.HEIGHT / 2);
@@ -41,37 +44,53 @@ public class Level {
         loadMap("/maps/plains.png");
     }
 
+    public void addEntity(Entity entity) {
+        entities.add(entity);
+    }
+
+    public void removeEntity(Entity entity) {
+        entities.remove(entity);
+    }
+
+    public void removeEntity(int index) {
+        entities.remove(index);
+    }
+
+    public Entity getEntity(int index) {
+        return entities.get(index);
+    }
+
     public void tick() {
         time++;
+
+        updateSkyColor();
 
         entities.forEach(Entity::tick);
     }
 
-    public void render(Screen screen) {
-        renderSky(screen);
-        renderTiles(screen);
-        entities.forEach(entity -> entity.render(screen));
-    }
-
-    public void renderSky(Screen screen) {
+    public void updateSkyColor() {
         int timeOfTheDay = (int) (time % 2400);
-        int color;
 
         if (timeOfTheDay < 200) { // dusk
             float factor = (float) timeOfTheDay / 200;
-            color = Utils.interpolateColor(Constants.NIGHT_COLOR, Constants.DUSK_COLOR, factor);
+            skyColor = Utils.interpolateColor(Constants.NIGHT_COLOR, Constants.DUSK_COLOR, factor);
         } else if (timeOfTheDay < 200 + 1000) { // day
             float factor = (float) (timeOfTheDay - 200) / 1000;
-            color = Utils.interpolateColor(Constants.DUSK_COLOR, Constants.DAY_COLOR, factor);
+            skyColor = Utils.interpolateColor(Constants.DUSK_COLOR, Constants.DAY_COLOR, factor);
         } else if (timeOfTheDay < 200 + 1000 + 200) { // dusk
             float factor = (float) (timeOfTheDay - 200 - 1000) / 200;
-            color = Utils.interpolateColor(Constants.DAY_COLOR, Constants.DUSK_COLOR, factor);
+            skyColor = Utils.interpolateColor(Constants.DAY_COLOR, Constants.DUSK_COLOR, factor);
         } else { // night
             float factor = (float) (timeOfTheDay - 200 - 1000 - 200) / 1000;
-            color = Utils.interpolateColor(Constants.DUSK_COLOR, Constants.NIGHT_COLOR, factor);
+            skyColor = Utils.interpolateColor(Constants.DUSK_COLOR, Constants.NIGHT_COLOR, factor);
         }
+    }
 
-        Arrays.fill(screen.pixels, color);
+    public void render(Screen screen) {
+        Arrays.fill(screen.pixels, skyColor);
+
+        renderTiles(screen);
+        entities.forEach(entity -> entity.render(screen));
     }
 
     public void renderTiles(Screen screen) {

@@ -6,7 +6,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 
 public class InputHandler implements KeyListener, MouseInputListener {
-    public boolean[] keys = new boolean[1024];
+    public boolean[] keys = new boolean[65535];
     public boolean[] mouseKeys = new boolean[8];
     public double mouseX, mouseY;
 
