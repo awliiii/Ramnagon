@@ -32,8 +32,8 @@ public class InputHandler implements KeyListener, MouseInputListener {
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        mouseX = e.getX() / Game.SCALE;
-        mouseY = e.getY() / Game.SCALE;
+        mouseX = (double) e.getX() / Constants.SCALE;
+        mouseY = (double) e.getY() / Constants.SCALE;
     }
 
     // UNUSED

@@ -16,7 +16,6 @@ public class Screen {
         this.height = height;
     }
 
-    // TODO: Flip X and Y
     public void draw(Texture texture, int xPosition, int yPosition) {
         int xStart = xPosition;
         int xEnd = xPosition + texture.WIDTH;
@@ -37,6 +36,14 @@ public class Screen {
                 int pixelColor = texture.pixels[(y - yPosition) * texture.WIDTH - xPosition + x];
                 if (pixelColor < 0)
                     pixels[x + y * width] = pixelColor;
+            }
+        }
+    }
+
+    public void fill(int xStart, int yStart, int xEnd, int yEnd, int color) {
+        for (int y = yStart; y < yEnd; y++) {
+            for (int x = xStart; x < xEnd; x++) {
+                pixels[x + y * width] = color;
             }
         }
     }

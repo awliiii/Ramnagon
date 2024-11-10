@@ -17,11 +17,6 @@ public class Camera {
         this.y += deltaY;
     }
 
-    public void centerAt(Entity entity) {
-        this.x = entity.getX();
-        this.y = entity.getY();
-    }
-
     // a tutaj są twoje gettery i settery
     public void setPosition(int x, int y) {
         this.x = x;

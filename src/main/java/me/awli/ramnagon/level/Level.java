@@ -3,14 +3,16 @@ package me.awli.ramnagon.level;
 import me.awli.ramnagon.Camera;
 import me.awli.ramnagon.Constants;
 import me.awli.ramnagon.Game;
+import me.awli.ramnagon.entity.DoubleTree;
 import me.awli.ramnagon.entity.Entity;
+import me.awli.ramnagon.entity.Player;
+import me.awli.ramnagon.entity.SingleTree;
 import me.awli.ramnagon.gfx.Screen;
 import me.awli.ramnagon.gfx.Texture;
 import me.awli.ramnagon.gfx.Textures;
 import me.awli.ramnagon.gfx.Utils;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -21,13 +23,9 @@ import java.util.Random;
 /*
  * TODO:
  *  - Independent tile position
- *  - Getter and setters for the entities list
  *  - Blend everything with the skyColor
  */
 public class Level {
-    public static final int TILE_WIDTH = 32;
-    public static final int TILE_HEIGHT = 32;
-
     public Camera camera;
 
     private final List<Entity> entities = new ArrayList<>();
@@ -42,6 +40,18 @@ public class Level {
         this.camera = new Camera(Game.WIDTH / 2, Game.HEIGHT / 2);
 
         loadMap("/maps/plains.png");
+
+        Random random = new Random();
+        for (int row = 0; row < map.length; row++) {
+            for (int column = 0; column < map[0].length; column++) {
+                int x = (row - column) * (Constants.TILE_WIDTH / 2);
+                int y = (row + column) * (Constants.TILE_HEIGHT / 4);
+
+                int number = random.nextInt(10);
+                if (number > 7)
+                    entities.add(new SingleTree(x + (Constants.TILE_WIDTH / 2), y  + (Constants.TILE_HEIGHT / 2)));
+            }
+        }
     }
 
     public void addEntity(Entity entity) {
@@ -69,19 +79,19 @@ public class Level {
     }
 
     public void updateSkyColor() {
-        int timeOfTheDay = (int) (time % 2400);
+        int timeOfTheDay = (int) (time % 24000);
 
-        if (timeOfTheDay < 200) { // dusk
-            float factor = (float) timeOfTheDay / 200;
+        if (timeOfTheDay < 2000) { // dusk
+            float factor = (float) timeOfTheDay / 2000;
             skyColor = Utils.interpolateColor(Constants.NIGHT_COLOR, Constants.DUSK_COLOR, factor);
-        } else if (timeOfTheDay < 200 + 1000) { // day
-            float factor = (float) (timeOfTheDay - 200) / 1000;
+        } else if (timeOfTheDay < 2000 + 10000) { // day
+            float factor = (float) (timeOfTheDay - 2000) / 10000;
             skyColor = Utils.interpolateColor(Constants.DUSK_COLOR, Constants.DAY_COLOR, factor);
-        } else if (timeOfTheDay < 200 + 1000 + 200) { // dusk
-            float factor = (float) (timeOfTheDay - 200 - 1000) / 200;
+        } else if (timeOfTheDay < 2000 + 10000 + 2000) { // dusk
+            float factor = (float) (timeOfTheDay - 2000 - 10000) / 2000;
             skyColor = Utils.interpolateColor(Constants.DAY_COLOR, Constants.DUSK_COLOR, factor);
         } else { // night
-            float factor = (float) (timeOfTheDay - 200 - 1000 - 200) / 1000;
+            float factor = (float) (timeOfTheDay - 2000 - 10000 - 2000) / 10000;
             skyColor = Utils.interpolateColor(Constants.DUSK_COLOR, Constants.NIGHT_COLOR, factor);
         }
     }
@@ -90,15 +100,15 @@ public class Level {
         Arrays.fill(screen.pixels, skyColor);
 
         renderTiles(screen);
-        entities.forEach(entity -> entity.render(screen));
+        entities.forEach(entity -> entity.render(screen, camera));
     }
 
     public void renderTiles(Screen screen) {
         for (int row = 0; row < map.length; row++) {
             for (int column = 0; column < map[0].length; column++) {
                 // 1:2 width:height
-                int x = (row - column) * (TILE_WIDTH / 2);
-                int y = (row + column) * (TILE_HEIGHT / 4);
+                int x = (row - column) * (Constants.TILE_WIDTH / 2);
+                int y = (row + column) * (Constants.TILE_HEIGHT / 4);
 
                 int tile = map[row][column];
                 if (tile == -128)

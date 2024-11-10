@@ -9,6 +9,9 @@ import java.io.IOException;
 public class Textures {
     public static final Texture[][] FONT = loadAndCut("/textures/ui/monogram-bitmap.png", 6, 10);
     public static final Texture[][] TILES = loadAndCut("/textures/tiles.png", 32, 32);
+    public static final Texture SINGLE_TREE = load("/textures/entities/deco/tree_single.png");
+    public static final Texture DOUBLE_TREE = load("/textures/entities/deco/tree_double.png");
+    public static final Texture INVENTORY = load("/textures/ui/inventory.png");
 
     public static Texture[][] loadAndCut(String name, int sw, int sh) {
         BufferedImage img;

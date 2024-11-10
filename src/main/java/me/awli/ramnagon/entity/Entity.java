@@ -1,11 +1,12 @@
 package me.awli.ramnagon.entity;
 
+import me.awli.ramnagon.Camera;
 import me.awli.ramnagon.gfx.Screen;
 
 public abstract class Entity {
-    private int x;
+    protected int x;
 
-    private int y;
+    protected int y;
 
     public Entity(int x, int y) {
         this.x = x;
@@ -13,7 +14,7 @@ public abstract class Entity {
     }
 
     public abstract void tick();
-    public abstract void render(Screen screen);
+    public abstract void render(Screen screen, Camera camera);
 
     public int getX() {
         return x;

@@ -1,12 +1,14 @@
 package me.awli.ramnagon;
 
 import me.awli.ramnagon.gfx.Screen;
+import me.awli.ramnagon.gfx.Textures;
 import me.awli.ramnagon.level.Level;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -14,11 +16,10 @@ import java.io.IOException;
 /*
  * TODO:
  *  - Player movement using mouse click
- *  - GUI
+ *  - GUI, part 2
  */
 public final class Game extends Canvas implements Runnable {
-    public static final int SCALE = 2;
-    public static final int WIDTH = 640;
+    public static final int WIDTH = 320;
     public static final int HEIGHT = (WIDTH * 3) / 4;
 
     public static final String TITLE = "RAMNAGON alpha";
@@ -32,7 +33,7 @@ public final class Game extends Canvas implements Runnable {
 
     private final Screen screen;
 
-    private Level level;
+    private final Level level;
 
     private Game() {
         // GAME HANDLERS
@@ -44,7 +45,7 @@ public final class Game extends Canvas implements Runnable {
         this.screen = new Screen(WIDTH, HEIGHT);
 
         // CANVAS STUFF
-        Dimension windowDimensions = new Dimension(WIDTH * SCALE, HEIGHT * SCALE);
+        Dimension windowDimensions = new Dimension(WIDTH * Constants.SCALE, HEIGHT * Constants.SCALE);
         this.setMinimumSize(windowDimensions);
         this.setPreferredSize(windowDimensions);
         this.setMaximumSize(windowDimensions);
@@ -92,19 +93,15 @@ public final class Game extends Canvas implements Runnable {
     }
 
     private void tick() {
-        // i have seen this in scratch games
+        // i have seen this in scratch games lol
         int sideways = (inputHandler.keys[KeyEvent.VK_A] ? 1 : 0) - (inputHandler.keys[KeyEvent.VK_D] ? 1 : 0);
         int forward = (inputHandler.keys[KeyEvent.VK_W] ? 1 : 0) - (inputHandler.keys[KeyEvent.VK_S] ? 1 : 0);
         // i should take the magnitude and then divide the delta through that magnitude
         // but it wouldnt work because everything is in int and not double/float
         level.camera.move(sideways * Constants.CAMERA_SPEED, forward * Constants.CAMERA_SPEED);
 
-        if (inputHandler.keys[KeyEvent.VK_1])
-            level.loadMap("/maps/plains.png");
-        else if (inputHandler.keys[KeyEvent.VK_2])
-            level.loadMap("/maps/long.png");
-        else if (inputHandler.keys[KeyEvent.VK_3])
-            level.loadMap("/maps/square.png");
+        if (inputHandler.mouseKeys[MouseEvent.BUTTON1])
+            System.out.println("(" + inputHandler.mouseX + ", " + inputHandler.mouseY + ")");
 
         level.tick();
     }
@@ -120,7 +117,15 @@ public final class Game extends Canvas implements Runnable {
 
         level.render(screen);
 
-        g.drawImage(screen.image, 0, 0, WIDTH * SCALE, HEIGHT * SCALE, null);
+        screen.draw(Textures.INVENTORY, 0, HEIGHT - Textures.INVENTORY.HEIGHT);
+
+        int currentHealth = (int) (level.getTime() % 100); // TEMP
+        int maxHealth = 100; // TEMP
+        int healthPercentage = (int) ((double) currentHealth / maxHealth * 100); // TEMP
+        int healthBarWidth = (int) ((healthPercentage / 100.0) * (78 - 8)); // TEMP
+        screen.fill(8, HEIGHT - 14, 8 + healthBarWidth, HEIGHT - 8, 0x8E2A33);
+
+        g.drawImage(screen.image, 0, 0, WIDTH * Constants.SCALE, HEIGHT * Constants.SCALE, null);
         g.dispose();
         bs.show();
     }

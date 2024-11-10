@@ -1,5 +1,6 @@
 package me.awli.ramnagon.entity;
 
+import me.awli.ramnagon.Camera;
 import me.awli.ramnagon.gfx.Screen;
 
 /*
@@ -22,7 +23,7 @@ public class Player extends Entity {
     }
 
     @Override
-    public void render(Screen screen) {
+    public void render(Screen screen, Camera camera) {
 
     }
 }
