@@ -44,7 +44,7 @@ public class Level {
     public void tick() {
         time++;
 
-        entities.forEach(entity -> entity.tick());
+        entities.forEach(Entity::tick);
     }
 
     public void render(Screen screen) {
